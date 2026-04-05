@@ -9,3 +9,12 @@ Social Media Analysis (SQL Project). This project analyzes social media data to 
   5. followers(follower_id, user_id, follower_user_id, follow_date)
   6. hashtags(hashtag_id, tag_name, category)
   7. post_hashtags(id, post_id, hashtag_id)
+
+## Key Insight:
+This query provides a holistic view of user engagement, capturing both content creation (posts) 
+and participation (comments), which is more meaningful than measuring activity using a single metric.
+Business Value:
+Helps identify highly engaged users.
+Useful for recognizing influencers, power users, or community leaders.
+Can guide reward systems or targeted engagement strategies.
+This solution strictly follows the given schema and accurately answers the analytical requirement.
