@@ -18,3 +18,9 @@ Helps identify highly engaged users.
 Useful for recognizing influencers, power users, or community leaders.
 Can guide reward systems or targeted engagement strategies.
 This solution strictly follows the given schema and accurately answers the analytical requirement.
+
+## Relationships:
+  • Each user can create multiple posts.
+  • Each post can have multiple likes and comments.
+  • Users can follow each other (self-join in followers table).
+  • Posts can be tagged with multiple hashtags (many-to-many via post_hashtags).
