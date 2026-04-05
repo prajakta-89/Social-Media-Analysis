@@ -26,12 +26,8 @@ This solution strictly follows the given schema and accurately answers the analy
   • Posts can be tagged with multiple hashtags (many-to-many via post_hashtags).
 
 ## BONUS CHALLENGES
-- 1. Engagement rate = (likes + comments) / posts
-- 2. Mutual followers
-- 3. Most used hashtags by top 5 influencers
-- 4. Country-wise engagement leaderboard
--- --------------------------------------------------------------
-### 1.
+
+### 1.  Engagement rate = (likes + comments) / posts
 ```sql
 SELECT
     u.user_id,
@@ -47,7 +43,7 @@ LEFT JOIN comments c
     ON p.post_id = c.post_id
 GROUP BY u.user_id, u.username;
 ```
-### 2.
+### 2. Mutual followers
 ```sql
 SELECT
     f1.user_id AS user_1,
@@ -58,7 +54,7 @@ JOIN followers f2
    AND f1.follower_user_id = f2.user_id
 WHERE f1.user_id < f1.follower_user_id;
 ```
-### 3.
+### 3.  Most used hashtags by top 5 influencers
 ```sql
 WITH top_influencers AS (
     SELECT
@@ -84,7 +80,7 @@ JOIN hashtags h
 GROUP BY h.hashtag_id, h.tag_name
 ORDER BY usage_count DESC;
 ```
-### 4.
+### 4. Country-wise engagement leaderboard
 ```sql
 SELECT
     u.country,
