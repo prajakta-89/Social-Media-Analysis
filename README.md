@@ -24,3 +24,80 @@ This solution strictly follows the given schema and accurately answers the analy
   • Each post can have multiple likes and comments.
   • Users can follow each other (self-join in followers table).
   • Posts can be tagged with multiple hashtags (many-to-many via post_hashtags).
+
+-- ==============================================================
+-- BONUS CHALLENGES
+-- ==============================================================
+-- 1. Engagement rate = (likes + comments) / posts
+-- 2. Mutual followers
+-- 3. Most used hashtags by top 5 influencers
+-- 4. Country-wise engagement leaderboard
+-- --------------------------------------------------------------
+## 1.
+```sql
+SELECT
+    u.user_id,
+    u.username,
+    (COUNT(DISTINCT l.like_id) + COUNT(DISTINCT c.comment_id)) * 1.0
+    / NULLIF(COUNT(DISTINCT p.post_id), 0) AS engagement_rate
+FROM users u
+LEFT JOIN posts p
+    ON u.user_id = p.user_id
+LEFT JOIN likes l
+    ON p.post_id = l.post_id
+LEFT JOIN comments c
+    ON p.post_id = c.post_id
+GROUP BY u.user_id, u.username;
+```
+## 2.
+```sql
+SELECT
+    f1.user_id AS user_1,
+    f1.follower_user_id AS user_2
+FROM followers f1
+JOIN followers f2
+    ON f1.user_id = f2.follower_user_id
+   AND f1.follower_user_id = f2.user_id
+WHERE f1.user_id < f1.follower_user_id;
+```
+## 3.
+```sql
+WITH top_influencers AS (
+    SELECT
+        u.user_id
+    FROM users u
+    JOIN followers f
+        ON u.user_id = f.user_id
+    GROUP BY u.user_id
+    ORDER BY COUNT(f.follower_user_id) DESC
+    LIMIT 5
+)
+SELECT
+    h.hashtag_id,
+    h.tag_name,
+    COUNT(ph.post_id) AS usage_count
+FROM top_influencers ti
+JOIN posts p
+    ON ti.user_id = p.user_id
+JOIN post_hashtags ph
+    ON p.post_id = ph.post_id
+JOIN hashtags h
+    ON ph.hashtag_id = h.hashtag_id
+GROUP BY h.hashtag_id, h.tag_name
+ORDER BY usage_count DESC;
+```
+## 4.
+```sql
+SELECT
+    u.country,
+    COUNT(DISTINCT l.like_id) + COUNT(DISTINCT c.comment_id) AS total_engagement
+FROM users u
+JOIN posts p
+    ON u.user_id = p.user_id
+LEFT JOIN likes l
+    ON p.post_id = l.post_id
+LEFT JOIN comments c
+    ON p.post_id = c.post_id
+GROUP BY u.country
+ORDER BY total_engagement DESC;
+```
